@@ -1,0 +1,24 @@
+{
+  "name": "aws-lambda-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node node_modules/ts-node/dist/bin test/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^10.12.15",
+    "@types/reflect-metadata": "^0.1.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.12",
+    "tslint": "^5.11.0"
+  }
+}

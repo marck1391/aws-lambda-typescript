@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "C:\\DokyRebuild\\lambda"
+		}
+	],
+	"settings": {
+		"tslint.nodePath": "node_modules",
+		"editor.tabSize": 2,
+		"editor.insertSpaces": false,
+		"editor.formatOnSave": true,
+		"tslint.run": "onSave"
+	}
+}
