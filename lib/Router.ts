@@ -117,7 +117,7 @@ class Request {
     constructor(request) {
         this.url = request.path
         this.headers = request.headers || {}
-        this.hostname = request.headers['Host']
+        this.hostname = this.headers['Host']
         this.body = request.body
         this.query = request.queryStringParameters
         this.cookies = parseCookies(this.headers['Cookie'] || '')
