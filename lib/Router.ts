@@ -2,7 +2,7 @@ function parsePath(path) {
     let params = {}
     var x = path.split('/')
     x = x.map((segment, index) => {
-        if(segment.startsWith(':')) {
+        if (segment.startsWith(':')) {
             let paramName = segment.replace(':', '')
             params[paramName] = index
             return `([^\\/]+)`
@@ -62,7 +62,7 @@ export class Router {
     }
 
     registerMethod(type, path, fn) {
-        let {re, params} = parsePath(path)
+        let { re, params } = parsePath(path)
         this.routes.push({
             path,
             method: type,
@@ -74,29 +74,29 @@ export class Router {
 
     async call(request) {
         request.path = request.path.replace(/\/$/, '')
-        let response = (req, res)=>{}
+        let response = (req, res) => { }
         let req = new Request(request)
         let res = new Response(req)
 
-        for(let mw of this.middlewares) {
+        for (let mw of this.middlewares) {
             let done = await mw(req, res)
-            if(!done) {
-                return res.send({error: 'NOT_ALLOWED'})
-            } else if(typeof done !== 'boolean') {
+            if (!done) {
+                return res.send({ error: 'NOT_ALLOWED' })
+            } else if (typeof done !== 'boolean') {
                 return done
             }
         }
 
         let found = this.routes.some(route => {
-            if(route.regEx.exec(request.path) && (route.method == request.httpMethod || route.method == 'ANY')) {
+            if (route.regEx.exec(request.path) && (route.method == request.httpMethod || route.method == 'ANY')) {
                 req.params = route.params
                 response = route.fn
                 return true
             }
             return false
         })
-        if(!found) {
-            return res.send({error: 'NOT_FOUND'})
+        if (!found) {
+            return res.send({ error: 'NOT_FOUND' })
         } else {
             return response(req, res)
         }
@@ -107,8 +107,8 @@ class Request {
     url:string
     hostname:string
     protocol:string
-    headers:{[param:string]:string}
-    cookies:{[param:string]:string}
+    headers:{ [param:string]:string }
+    cookies:{ [param:string]:string }
     body:any
     query:any
 
@@ -116,7 +116,7 @@ class Request {
 
     constructor(request) {
         this.url = request.path
-        this.headers = request.headers
+        this.headers = request.headers || {}
         this.hostname = request.headers['Host']
         this.body = request.body
         this.query = request.queryStringParameters
@@ -126,17 +126,17 @@ class Request {
 
     param(name) {
         let x = this.url.split('/')
-        if(this._params.hasOwnProperty(name)) {
+        if (this._params.hasOwnProperty(name)) {
             let index = this._params[name]
-            if(index < 0 || index > this.url.length - 1) return null
+            if (index < 0 || index > this.url.length - 1) return null
             return x[index]
         } else {
             return null
         }
     }
-    
 
-    set params(value){
+
+    set params(value) {
         this._params = value
     }
 }
@@ -144,8 +144,8 @@ class Request {
 export class Response {
     request:Request
     statusCode:number
-    headers:{[param:string]:string}
-    
+    headers:{ [param:string]:string }
+
     constructor(request) {
         this.request = request
         this.statusCode = 200

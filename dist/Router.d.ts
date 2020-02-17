@@ -27,7 +27,7 @@ declare class Request {
     private _params;
     constructor(request: any);
     param(name: any): string | null;
-    params: any;
+    set params(value: any);
 }
 export declare class Response {
     request: Request;
