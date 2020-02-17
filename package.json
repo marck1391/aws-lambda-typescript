@@ -13,12 +13,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^10.12.15",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.2.2",
-    "tslint": "^5.11.0"
+    "@types/node": "latest",
+    "ts-node": "latest",
+    "typescript": "latest",
+    "tslint": "latest"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.12"
+    "reflect-metadata": "latest"
   }
 }
