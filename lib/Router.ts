@@ -73,7 +73,7 @@ export class Router {
     }
 
     async call(request) {
-        request.path = request.path.replace(/\/$/, '')
+        request.path = request.path.replace(/(.+)\/$/, '$1') || '/'
         let response = (req, res) => { }
         let req = new Request(request)
         let res = new Response(req)

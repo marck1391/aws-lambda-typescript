@@ -1,6 +1,6 @@
 export var request = {
     resource: '/{proxy+}',
-    path: '/other',
+    path: '/',
     httpMethod: 'GET',
     headers: {
         Host: 'api.m4rk.xyz',

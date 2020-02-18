@@ -11,6 +11,11 @@ class App {
         this.data.test2 = 'Testing'
     }
 
+    @Get('/')
+    task() {
+        return 'Welcome!'
+    }
+
     @Get('/task/:id')
     //id = param, Host = header, res = Response object
     async test(id:string, Host:string, res:Response) {
@@ -20,10 +25,7 @@ class App {
         return { success: true }
     }
 
-    @Get()
-    task() {
-        return 'Welcome!'
-    }
+
 }
 
 let router:Router = Reflect.getMetadata('router', App)
