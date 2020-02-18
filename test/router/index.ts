@@ -1,4 +1,4 @@
-import { LambdaRouter, Post, Get, Router, Response } from '../../lib/index'
+import { LambdaRouter, Post, Get, Router, Response, Middleware } from '../../lib/index'
 
 @LambdaRouter({
     headers: {
@@ -13,7 +13,7 @@ class App {
 
     @Get('/')
     task() {
-        return 'Welcome!'
+        return 'Welcomes!'
     }
 
     @Get('/task/:id')
@@ -24,8 +24,6 @@ class App {
         console.log('Instance data', this.data.test2)
         return { success: true }
     }
-
-
 }
 
 let router:Router = Reflect.getMetadata('router', App)

@@ -9,7 +9,7 @@ export declare class Router {
     put(path: any, fn: any): void;
     options(path: any, fn: any): void;
     any(path: any, fn: any): void;
-    registerMethod(type: any, path: any, fn: any): void;
+    registerMethod(type: any, path: any, fn: any, middlewares?: any[]): void;
     call(request: any): Promise<any>;
 }
 declare class Request {

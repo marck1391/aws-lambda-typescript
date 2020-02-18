@@ -58,6 +58,10 @@ function LambdaRouter(options) {
             Reflect.defineMetadata('router', router, constructor);
         }
         var methods = Reflect.getMetadata('methods', constructor);
+        (options.middlewares || []).forEach(function (mw) {
+            router.use(mw);
+        });
+        //console.log('Methods', methods, router)
         (methods || []).forEach(function (method) {
             //console.log('Call ', method.type, method.route)
             var fnWrapper = function (req, res) {
@@ -75,7 +79,10 @@ function LambdaRouter(options) {
                     });
                 });
             };
-            router.registerMethod(method.type, method.route, fnWrapper);
+            //console.log('Call2', method.type, method.route, fnWrapper)
+            var mws = Reflect.getMetadata('mws', constructor) || [];
+            mws = mws.filter(function (mw) { return mw.key === method.key; }).map(function (mw) { return mw.fn; });
+            router.registerMethod(method.type, method.route, fnWrapper, mws);
         });
     };
 }
@@ -102,6 +109,23 @@ function Delete(resource, options) {
     return Route('DELETE', resource, options);
 }
 exports.Delete = Delete;
+function Middleware() {
+    var middlewares = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        middlewares[_i] = arguments[_i];
+    }
+    return function (target, key, descriptor) {
+        var mws = Reflect.getMetadata('mws', target.constructor);
+        if (!mws) {
+            mws = [];
+            Reflect.defineMetadata('mws', mws, target.constructor);
+        }
+        middlewares.forEach(function (mw) {
+            mws.push({ key: key, fn: mw });
+        });
+    };
+}
+exports.Middleware = Middleware;
 function Route(type, resource, options) {
     return function (target, key, descriptor) {
         var methods = Reflect.getMetadata('methods', target.constructor);
@@ -109,8 +133,10 @@ function Route(type, resource, options) {
             methods = [];
             Reflect.defineMetadata('methods', methods, target.constructor);
         }
+        var route = (resource || key).replace(/^\/?(.*)/, '/$1');
         methods.push({
-            route: (resource || key).replace(/^\/?(.*)/, '/$1'),
+            key: key,
+            route: route,
             type: type,
             fn: RouteInjector(target, key, descriptor),
             options: options
@@ -179,19 +205,19 @@ function modifyArgs(params, _a) {
                 val = req.headers[param.name];
             }
             /*
-            //Param type validation
-            if(param.type == 'Number' && !isNaN(val)) {
-                return args.push(parseInt(val))
-            } else if(param.type == 'Array' && Array.isArray(val)) {
-                return args.push(val)
-            } else if(param.type == 'Boolean' && (val == 'false' || val == 'true')) {
-                return args.push(val == 'false' ? false : val == 'true' ? true : val)
-            } else if(param.type == 'Object') {
-                return args.push(val)
-            } else if(param.type.toLowerCase() != typeof val) {
-                //TODO: HTTP Error Code: 412 Precondition Failed
-                throw Error(`Param '${param.name}' is not of type ${param.type}`)
-            }*/
+                  //Param type validation
+                  if(param.type == 'Number' && !isNaN(val)) {
+                      return args.push(parseInt(val))
+                  } else if(param.type == 'Array' && Array.isArray(val)) {
+                      return args.push(val)
+                  } else if(param.type == 'Boolean' && (val == 'false' || val == 'true')) {
+                      return args.push(val == 'false' ? false : val == 'true' ? true : val)
+                  } else if(param.type == 'Object') {
+                      return args.push(val)
+                  } else if(param.type.toLowerCase() != typeof val) {
+                      //TODO: HTTP Error Code: 412 Precondition Failed
+                      throw Error(`Param '${param.name}' is not of type ${param.type}`)
+                  }*/
             args.push(val);
         }
         else {

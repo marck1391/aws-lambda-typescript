@@ -61,14 +61,15 @@ export class Router {
         this.registerMethod('ANY', path, fn)
     }
 
-    registerMethod(type, path, fn) {
+    registerMethod(type, path, fn, middlewares:any[] = []) {
         let { re, params } = parsePath(path)
         this.routes.push({
             path,
             method: type,
             fn,
             params,
-            regEx: re
+            regEx: re,
+            middlewares
         })
     }
 
@@ -77,18 +78,10 @@ export class Router {
         let response = (req, res) => { }
         let req = new Request(request)
         let res = new Response(req)
-
-        for (let mw of this.middlewares) {
-            let done = await mw(req, res)
-            if (!done) {
-                return res.send({ error: 'NOT_ALLOWED' })
-            } else if (typeof done !== 'boolean') {
-                return done
-            }
-        }
-
+        let mws:any[] = []
         let found = this.routes.some(route => {
             if (route.regEx.exec(request.path) && (route.method == request.httpMethod || route.method == 'ANY')) {
+                mws = route.middlewares || []
                 req.params = route.params
                 response = route.fn
                 return true
@@ -98,6 +91,28 @@ export class Router {
         if (!found) {
             return res.send({ error: 'NOT_FOUND' })
         } else {
+            for (let mw of this.middlewares) {
+                let error = await mw(req, res).catch(e => e)
+                if (error) {
+                    return error
+                }
+                /*if (!done) {
+                    return res.send({ error: 'NOT_ALLOWED' })
+                } else if (typeof done !== 'boolean') {
+                    return done
+                }*/
+            }
+            for (let mw of mws) {
+                let error = await mw(req, res).catch(e => e)
+                if (error) {
+                    return error
+                }
+                /*if (!done) {
+                    return res.send({ error: 'NOT_ALLOWED' })
+                } else if (typeof done !== 'boolean') {
+                    return done
+                }*/
+            }
             return response(req, res)
         }
     }

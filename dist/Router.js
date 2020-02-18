@@ -86,60 +86,73 @@ var Router = /** @class */ (function () {
     Router.prototype.any = function (path, fn) {
         this.registerMethod('ANY', path, fn);
     };
-    Router.prototype.registerMethod = function (type, path, fn) {
+    Router.prototype.registerMethod = function (type, path, fn, middlewares) {
+        if (middlewares === void 0) { middlewares = []; }
         var _a = parsePath(path), re = _a.re, params = _a.params;
         this.routes.push({
             path: path,
             method: type,
             fn: fn,
             params: params,
-            regEx: re
+            regEx: re,
+            middlewares: middlewares
         });
     };
     Router.prototype.call = function (request) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, req, res, _i, _a, mw, done, found;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var response, req, res, mws, found, _i, _a, mw, error, _b, mws_1, mw, error;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        request.path = request.path.replace(/\/$/, '');
+                        request.path = request.path.replace(/(.+)\/$/, '$1') || '/';
                         response = function (req, res) { };
                         req = new Request(request);
                         res = new Response(req);
-                        _i = 0, _a = this.middlewares;
-                        _b.label = 1;
-                    case 1:
-                        if (!(_i < _a.length)) return [3 /*break*/, 4];
-                        mw = _a[_i];
-                        return [4 /*yield*/, mw(req, res)];
-                    case 2:
-                        done = _b.sent();
-                        if (!done) {
-                            return [2 /*return*/, res.send({ error: 'NOT_ALLOWED' })];
-                        }
-                        else if (typeof done !== 'boolean') {
-                            return [2 /*return*/, done];
-                        }
-                        _b.label = 3;
-                    case 3:
-                        _i++;
-                        return [3 /*break*/, 1];
-                    case 4:
+                        mws = [];
                         found = this.routes.some(function (route) {
                             if (route.regEx.exec(request.path) && (route.method == request.httpMethod || route.method == 'ANY')) {
+                                mws = route.middlewares || [];
                                 req.params = route.params;
                                 response = route.fn;
                                 return true;
                             }
                             return false;
                         });
-                        if (!found) {
-                            return [2 /*return*/, res.send({ error: 'NOT_FOUND' })];
+                        if (!!found) return [3 /*break*/, 1];
+                        return [2 /*return*/, res.send({ error: 'NOT_FOUND' })];
+                    case 1:
+                        _i = 0, _a = this.middlewares;
+                        _c.label = 2;
+                    case 2:
+                        if (!(_i < _a.length)) return [3 /*break*/, 5];
+                        mw = _a[_i];
+                        return [4 /*yield*/, mw(req, res).catch(function (e) { return e; })];
+                    case 3:
+                        error = _c.sent();
+                        if (error) {
+                            return [2 /*return*/, error];
                         }
-                        else {
-                            return [2 /*return*/, response(req, res)];
+                        _c.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 5:
+                        _b = 0, mws_1 = mws;
+                        _c.label = 6;
+                    case 6:
+                        if (!(_b < mws_1.length)) return [3 /*break*/, 9];
+                        mw = mws_1[_b];
+                        return [4 /*yield*/, mw(req, res).catch(function (e) { return e; })];
+                    case 7:
+                        error = _c.sent();
+                        if (error) {
+                            return [2 /*return*/, error];
                         }
-                        return [2 /*return*/];
+                        _c.label = 8;
+                    case 8:
+                        _b++;
+                        return [3 /*break*/, 6];
+                    case 9: return [2 /*return*/, response(req, res)];
                 }
             });
         });

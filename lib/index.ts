@@ -16,6 +16,9 @@ export function LambdaRouter(options:any = {}) {
             Reflect.defineMetadata('router', router, constructor)
         }
         let methods = Reflect.getMetadata('methods', constructor);
+        (options.middlewares || []).forEach(mw => {
+            router.use(mw)
+        });
         //console.log('Methods', methods, router)
         (methods || []).forEach(method => {
             //console.log('Call ', method.type, method.route)
@@ -26,7 +29,9 @@ export function LambdaRouter(options:any = {}) {
                 return res.send(response)
             }
             //console.log('Call2', method.type, method.route, fnWrapper)
-            router.registerMethod(method.type, method.route, fnWrapper)
+            let mws:any[] = Reflect.getMetadata('mws', constructor) || []
+            mws = mws.filter(mw => mw.key === method.key).map(mw => mw.fn)
+            router.registerMethod(method.type, method.route, fnWrapper, mws)
         })
     }
 }
@@ -47,6 +52,19 @@ export function Delete(resource:string, options:any = {}) {
     return Route('DELETE', resource, options)
 }
 
+export function Middleware(...middlewares) {
+    return function(target, key:any, descriptor:PropertyDescriptor) {
+        let mws:any[] = Reflect.getMetadata('mws', target.constructor)
+        if (!mws) {
+            mws = []
+            Reflect.defineMetadata('mws', mws, target.constructor)
+        }
+        middlewares.forEach(mw => {
+            mws.push({ key, fn: mw })
+        })
+    }
+}
+
 function Route(type:string, resource:string, options:any) {
     return function(target, key:any, descriptor:PropertyDescriptor) {
         let methods = Reflect.getMetadata('methods', target.constructor)
@@ -57,15 +75,13 @@ function Route(type:string, resource:string, options:any) {
         }
 
         let route = (resource || key).replace(/^\/?(.*)/, '/$1')
-        console.log('key', type, resource, key, route)
         methods.push({
+            key,
             route,
             type: type,
             fn: RouteInjector(target, key, descriptor),
             options
         })
-
-
     }
 }
 
@@ -81,7 +97,6 @@ function RouteInjector(target, key, descriptor) {
 
     return async function(req, res) {
         let args = modifyArgs(params, { req, res })
-        console.log('asd', target.constructor.prototype[key], key)
         return await target.constructor.prototype[key].apply(this, args)
     }
 }
