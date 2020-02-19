@@ -169,7 +169,7 @@ var Request = /** @class */ (function () {
         this.query = request.queryStringParameters;
         this.cookies = parseCookies(this.headers['Cookie'] || '');
         this.protocol = request.headers['X-Forwarded-Proto'];
-        this.method = request.method;
+        this.method = request.httpMethod;
     }
     Request.prototype.param = function (name) {
         var x = this.url.split('/');
