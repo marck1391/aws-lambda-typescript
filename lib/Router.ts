@@ -92,7 +92,7 @@ export class Router {
             return res.send({ error: 'NOT_FOUND' })
         } else {
             for (let mw of this.middlewares) {
-                let error = await mw(req, res).catch(e => e)
+                let error = await (mw(req, res).catch(e => e))
                 if (error) {
                     return error
                 }
