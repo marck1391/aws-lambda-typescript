@@ -24,6 +24,7 @@ declare class Request {
     };
     body: any;
     query: any;
+    method: string;
     private _params;
     constructor(request: any);
     param(name: any): string | null;

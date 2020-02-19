@@ -126,6 +126,7 @@ class Request {
     cookies:{ [param:string]:string }
     body:any
     query:any
+    method:string
 
     private _params:any
 
@@ -137,6 +138,7 @@ class Request {
         this.query = request.queryStringParameters
         this.cookies = parseCookies(this.headers['Cookie'] || '')
         this.protocol = request.headers['X-Forwarded-Proto']
+        this.method = request.method
     }
 
     param(name) {
