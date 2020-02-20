@@ -13,6 +13,7 @@ export declare class Router {
     call(request: any): Promise<any>;
 }
 export declare class Request {
+    [prop: string]: any;
     url: string;
     hostname: string;
     protocol: string;
