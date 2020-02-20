@@ -12,7 +12,7 @@ export declare class Router {
     registerMethod(type: any, path: any, fn: any, middlewares?: any[]): void;
     call(request: any): Promise<any>;
 }
-declare class Request {
+export declare class Request {
     url: string;
     hostname: string;
     protocol: string;
@@ -45,4 +45,3 @@ export declare class Response {
         };
     };
 }
-export {};

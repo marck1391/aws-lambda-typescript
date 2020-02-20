@@ -126,7 +126,7 @@ var Router = /** @class */ (function () {
                     case 2:
                         if (!(_i < _a.length)) return [3 /*break*/, 5];
                         mw = _a[_i];
-                        return [4 /*yield*/, mw(req, res).catch(function (e) { return e; })];
+                        return [4 /*yield*/, (mw(req, res).catch(function (e) { return e; }))];
                     case 3:
                         error = _c.sent();
                         if (error) {
@@ -192,6 +192,7 @@ var Request = /** @class */ (function () {
     });
     return Request;
 }());
+exports.Request = Request;
 var Response = /** @class */ (function () {
     function Response(request) {
         this.request = request;

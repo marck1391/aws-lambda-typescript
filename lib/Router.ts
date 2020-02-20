@@ -118,7 +118,7 @@ export class Router {
     }
 }
 
-class Request {
+export class Request {
     url:string
     hostname:string
     protocol:string
