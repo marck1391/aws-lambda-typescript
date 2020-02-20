@@ -3,7 +3,7 @@ import { Injector } from './DependencyInjection'
 import getParamNames from './GetParamNames';
 
 import { Router } from './Router'
-export { Router, Response } from './Router'
+export { Router, Request, Response } from './Router'
 
 export function LambdaRouter(options:any = {}) {
     return function(constructor:any) {

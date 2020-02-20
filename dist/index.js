@@ -45,6 +45,7 @@ var GetParamNames_1 = __importDefault(require("./GetParamNames"));
 var Router_1 = require("./Router");
 var Router_2 = require("./Router");
 exports.Router = Router_2.Router;
+exports.Request = Router_2.Request;
 exports.Response = Router_2.Response;
 function LambdaRouter(options) {
     if (options === void 0) { options = {}; }
