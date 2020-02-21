@@ -142,7 +142,6 @@ export class Request {
             body = JSON.parse(request.body || "{}")
         } catch (e) { }
         this.body = body
-        console.log('Request body:', body)
         this.query = request.queryStringParameters
         this.cookies = parseCookies(this.headers['Cookie'] || '')
         this.protocol = request.headers['X-Forwarded-Proto']
