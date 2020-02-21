@@ -137,11 +137,12 @@ export class Request {
         this.hostname = this.headers['Host']
         this.host = this.headers['Host']
         this.origin = this.headers['Origin']
+        var body = {}
         try {
-            this.body = JSON.parse(request.body || "{}")
-        } catch (e) {
-            this.body = {}
-        }
+            body = JSON.parse(request.body || "{}")
+        } catch (e) { }
+        this.body = body
+        console.log('Request body:', body)
         this.query = request.queryStringParameters
         this.cookies = parseCookies(this.headers['Cookie'] || '')
         this.protocol = request.headers['X-Forwarded-Proto']
