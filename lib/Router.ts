@@ -136,7 +136,7 @@ export class Request {
         this.headers = request.headers || {}
         this.hostname = this.headers['Host']
         this.host = this.headers['Host']
-        this.origin = this.headers['Origin']
+        this.origin = this.headers['Origin'] || this.headers['origin']
         var body = {}
         try {
             body = JSON.parse(request.body || "{}")

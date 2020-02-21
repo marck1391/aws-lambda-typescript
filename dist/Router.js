@@ -166,13 +166,13 @@ var Request = /** @class */ (function () {
         this.headers = request.headers || {};
         this.hostname = this.headers['Host'];
         this.host = this.headers['Host'];
-        this.origin = this.headers['Origin'];
+        this.origin = this.headers['Origin'] || this.headers['origin'];
+        var body = {};
         try {
-            this.body = JSON.parse(request.body || "{}");
+            body = JSON.parse(request.body || "{}");
         }
-        catch (e) {
-            this.body = {};
-        }
+        catch (e) { }
+        this.body = body;
         this.query = request.queryStringParameters;
         this.cookies = parseCookies(this.headers['Cookie'] || '');
         this.protocol = request.headers['X-Forwarded-Proto'];
