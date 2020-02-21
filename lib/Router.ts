@@ -135,7 +135,13 @@ export class Request {
         this.url = request.path
         this.headers = request.headers || {}
         this.hostname = this.headers['Host']
-        this.body = request.body
+        this.host = this.headers['Host']
+        this.origin = this.headers['Origin']
+        try {
+            this.body = JSON.parse(request.body || "{}")
+        } catch (e) {
+            this.body = {}
+        }
         this.query = request.queryStringParameters
         this.cookies = parseCookies(this.headers['Cookie'] || '')
         this.protocol = request.headers['X-Forwarded-Proto']
@@ -153,7 +159,6 @@ export class Request {
         }
     }
 
-
     set params(value) {
         this._params = value
     }
@@ -168,8 +173,8 @@ export class Response {
         this.request = request
         this.statusCode = 200
         this.headers = {
-            'Access-Control-Allow-Origin': `${request.protocol}://${request.hostname}`,
-            'Content-Type': 'text/plain'
+            'Access-Control-Allow-Origin': request.origin,
+            'Content-Type': 'application/json'
         }
     }
 
