@@ -128,10 +128,12 @@ export class Request {
     body:any
     query:any
     method:string
+    _request:any
 
     private _params:any
 
     constructor(request) {
+        this._request = request
         this.url = request.path
         this.headers = request.headers || {}
         this.hostname = this.headers['Host']

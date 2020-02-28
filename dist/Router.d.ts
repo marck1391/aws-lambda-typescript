@@ -26,6 +26,7 @@ export declare class Request {
     body: any;
     query: any;
     method: string;
+    _request: any;
     private _params;
     constructor(request: any);
     param(name: any): string | null;

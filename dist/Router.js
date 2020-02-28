@@ -162,6 +162,7 @@ var Router = /** @class */ (function () {
 exports.Router = Router;
 var Request = /** @class */ (function () {
     function Request(request) {
+        this._request = request;
         this.url = request.path;
         this.headers = request.headers || {};
         this.hostname = this.headers['Host'];
