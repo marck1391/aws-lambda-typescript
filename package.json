@@ -2,7 +2,7 @@
   "name": "aws-lambda-ts",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test:di": "node node_modules/ts-node/dist/bin test/di",
