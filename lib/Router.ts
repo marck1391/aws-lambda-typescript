@@ -75,6 +75,7 @@ export class Router {
 
     async call(request) {
         request.path = request.path.replace(/(.+)\/$/, '$1') || '/'
+        //console.log('request path', request.path)
         let response = (req, res) => { }
         let req = new Request(request)
         let res = new Response(req)
@@ -89,6 +90,7 @@ export class Router {
             return false
         })
         if (!found) {
+            res.statusCode = 404
             return res.send({ error: 'NOT_FOUND' })
         } else {
             for (let mw of this.middlewares) {
@@ -175,7 +177,7 @@ export class Response {
         this.request = request
         this.statusCode = 200
         this.headers = {
-            'Access-Control-Allow-Origin': request.origin,
+            //'Access-Control-Allow-Origin': request.origin,
             'Content-Type': 'application/json'
         }
     }
