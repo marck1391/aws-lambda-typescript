@@ -5,13 +5,14 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "Marco Orta",
   "license": "ISC",
   "devDependencies": {
     "@jest/globals": "^29.4.2",
+    "@types/jest": "^29.4.0",
     "@types/node": "^18.13.0",
     "jest": "^29.4.2",
     "ts-jest": "^29.0.5",
