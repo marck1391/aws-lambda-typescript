@@ -5,10 +5,10 @@ import { AnotherService } from './AnotherService'
 export class MyService{
     data:any = {}
     constructor(private other:AnotherService){
-        console.log('Init service')
+        //console.log('Init service')
         this.data.test = 'Testing'
-        console.log('Injected', other.constructor.name)
-        console.log('Getting AnotherService from MyService')
+        //console.log('Injected', other.constructor.name)
+        //console.log('Getting AnotherService from MyService')
         other.data.prop = 'Yeah'
     }
     getUser(){

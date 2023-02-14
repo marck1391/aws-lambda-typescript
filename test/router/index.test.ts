@@ -1,4 +1,6 @@
+import {describe, expect, test} from '@jest/globals';
 import { LambdaRouter, Post, Get, Router, Response, Middleware } from '../../lib/index'
+import { request } from './testdata'
 
 @LambdaRouter({
     headers: {
@@ -28,9 +30,9 @@ class App {
 
 let router:Router = Reflect.getMetadata('router', App)
 
-let start = Date.now()
-import { request } from './testdata'
-let response = router.call(request)
-response.then((r:any) => {
-    console.log('Response', r, 'ms', Date.now() - start)
-})
+describe('LambdaRouter', () => {
+  test('Router Get /', async () => {
+    let response = await router.call(request)
+    expect(JSON.parse(response.body)).toBe('Welcomes!');
+  });
+});
