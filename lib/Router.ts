@@ -1,3 +1,6 @@
+import {Router as ExpressRouter, RouterOptions} from 'express'
+import express from 'express'
+
 function parsePath(path) {
     let params = {}
     var x = path.split('/')
@@ -24,7 +27,7 @@ function parseCookies(cookie_header) {
     return cookies
 }
 
-export class Router {
+export class Router{
     routes:any[]
     middlewares:any[]
 
@@ -33,33 +36,33 @@ export class Router {
         this.middlewares = []
     }
 
-    use(fn) {
-        this.middlewares.push(fn)
-    }
+    // use(fn) {
+    //     this.middlewares.push(fn)
+    // }
 
-    get(path, fn) {
-        this.registerMethod('GET', path, fn)
-    }
+    // get(path, fn) {
+    //     this.registerMethod('GET', path, fn)
+    // }
 
-    post(path, fn) {
-        this.registerMethod('POST', path, fn)
-    }
+    // post(path, fn) {
+    //     this.registerMethod('POST', path, fn)
+    // }
 
-    delete(path, fn) {
-        this.registerMethod('DELETE', path, fn)
-    }
+    // delete(path, fn) {
+    //     this.registerMethod('DELETE', path, fn)
+    // }
 
-    put(path, fn) {
-        this.registerMethod('PUT', path, fn)
-    }
+    // put(path, fn) {
+    //     this.registerMethod('PUT', path, fn)
+    // }
 
-    options(path, fn) {
-        this.registerMethod('OPTIONS', path, fn)
-    }
+    // options(path, fn) {
+    //     this.registerMethod('OPTIONS', path, fn)
+    // }
 
-    any(path, fn) {
-        this.registerMethod('ANY', path, fn)
-    }
+    // any(path, fn) {
+    //     this.registerMethod('ANY', path, fn)
+    // }
 
     registerMethod(type, path, fn, middlewares:any[] = []) {
         let { re, params } = parsePath(path)

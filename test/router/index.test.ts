@@ -1,38 +1,28 @@
-import {describe, expect, test} from '@jest/globals';
-import { LambdaRouter, Post, Get, Router, Response, Middleware } from '../../lib/index'
-import { request } from './testdata'
+import {describe, expect, test, beforeAll} from '@jest/globals';
+import { LambdaRouter, Post, Get, Router, Middleware } from '../../lib/index'
+import { Server } from 'http'
+import fetch from 'node-fetch'
+import express, {Express} from 'express'
+import App from './App';
 
-@LambdaRouter({
-    headers: {
-        'Content-Type': 'application/json'
-    }
-})
-class App {
-    data:any = {}
-    constructor() {
-        this.data.test2 = 'Testing'
-    }
+let server:Server
 
-    @Get('/')
-    task() {
-        return 'Welcomes!'
-    }
+beforeAll(()=>{
+    let router:Router = Reflect.getMetadata('router', App)
+    const app:Express = express()
+    app.use(router)
+    server = app.listen(3000)
+}, 108000)
 
-    @Get('/task/:id')
-    //id = param, Host = header, res = Response object
-    async test(id:string, Host:string, res:Response) {
-        delete res.headers['Access-Control-Allow-Origin']
-        console.log('Test Function', id, Host)
-        console.log('Instance data', this.data.test2)
-        return { success: true }
-    }
-}
-
-let router:Router = Reflect.getMetadata('router', App)
 
 describe('LambdaRouter', () => {
   test('Router Get /', async () => {
-    let response = await router.call(request)
-    expect(JSON.parse(response.body)).toBe('Welcomes!');
+    let {hello} = await fetch('http://localhost:3000/').then(res=>res.json())
+    
+    expect(hello).toBe('world!');
   });
 });
+
+afterAll(()=>{
+    server.close()
+})

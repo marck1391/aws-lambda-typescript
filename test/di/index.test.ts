@@ -1,5 +1,5 @@
 import {describe, expect, test} from '@jest/globals';
-import { Router, Post, LambdaRouter } from '../../lib/index'
+import { LambdaRouter } from '../../lib/index'
 import { MyService } from './MyService'
 import {AnotherService} from './AnotherService';
 
